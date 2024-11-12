@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Создание поста{% endblock %}
+
+{% block content %}
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Создать</button>
+</form>
+{% endblock %}
+
+{% block js %}
+<script>
+$('#id_name, #id_description, #id_text').addClass('form-control')
+</script>
+{% endblock %}

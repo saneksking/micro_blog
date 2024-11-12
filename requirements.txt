@@ -1,0 +1,6 @@
+asgiref
+Django
+mysqlclient
+sqlparse
+redis
+python-dotenv

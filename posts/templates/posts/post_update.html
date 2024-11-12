@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Изменинение поста{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

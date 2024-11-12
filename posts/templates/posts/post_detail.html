@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load post_tags %}
+
+{% block title %}{{ post.name }}{% endblock %}
+
+{% block content %}
+    <h1 class="text-primary text-center">{{ post.name }}</h1>
+    <hr>
+        <ul class="list-group" style="box-shadow: 0 0 10px #CFE2FF">
+          <li class="list-group-item active">Дата публикации: {{ post.updated_at }} 👁️ {% unique_watch post.id %} | 👀 {% watch post.id %}</li>
+          <li class="list-group-item list-group-item-success">Автор: {{ post.author }}</li>
+          <li class="list-group-item">Описание: {{ post.description }}</li>
+          <li class="list-group-item">Текст: {{ post.text|linebreaks|urlize }}</li>
+          {% if user.is_authenticated %}
+              <li class="list-group-item"><a href="{% url 'posts:post_update' post.id %}" class="btn btn-warning">Изменить</a><a href="{% url 'posts:post_delete' post.id %}" class="btn btn-danger" onclick="return confirm('Вы действительно хотите удалить этот пост?')">Удалить</a></li>
+          {% endif %}
+        </ul>
+    <br>
+    <a href="{% url 'posts:grade_like' post.id %}" class="btn btn-success">👍 {% post_grade_like post.id %}</a>
+    <a href="{% url 'posts:grade_dislike' post.id %}" class="btn btn-danger">👎 {% post_grade_dislike post.id %}</a>
+    <br>
+    <hr>
+    {% for comment in objects %}
+        <br>
+        <ul class="list-group" style="box-shadow: 0 0 10px #CFE2FF; width: 30%">
+          <li class="list-group-item active">Дата публикации: </li>
+          <li class="list-group-item list-group-item-success">Автор: {{ comment.author }}</li>
+          <li class="list-group-item">Текст: {{ comment.text|linebreaks|urlize }}</li>
+          {% if user.is_authenticated %}
+              <li class="list-group-item"><a href="{% url 'posts:comment_delete' post.id comment.id %}" class="btn btn-danger" onclick="return confirm('Вы действительно хотите удалить этот комментарий?')">Удалить</a></li>
+          {% endif %}
+        </ul>
+    {% endfor %}
+    <br>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if objects.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ objects.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for page in objects.paginator.page_range %}
+                    {% if objects.number == page %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if objects.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ objects.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ objects.paginator.num_pages }}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    <hr>
+    <form action="" method="post">
+          {% csrf_token %}
+        <label for="new_author">Автор:</label><input id="new_author" name="new_author" class="form-control">
+        <label for="new_comment">Комментарий:</label><textarea id="new_comment" name="new_comment" class="form-control"></textarea>
+        <br>
+        <button type="submit" class="btn btn-success" name="btn">Отправить</button>
+    </form>
+    <hr>
+    <a href="{% url 'posts:posts' %}" class="btn btn-success">Все публикации</a>
+{% endblock %}
+{% block js %}
+    <script>
+
+    </script>
+{% endblock %}

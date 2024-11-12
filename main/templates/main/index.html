@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load post_tags %}
+
+{% block content %}
+    <h1 style="font-size: 36px" class="text-center text-primary">{{ settings.site_description }}</h1>
+    <hr>
+    {% for post in post_list %}
+        <ul class="list-group" style="box-shadow: 0 0 10px #CFE2FF">
+  <li class="list-group-item active">Дата публикации: {{ post.updated_at }}</li>
+  <li class="list-group-item list-group-item-success">Автор: {{ post.author }}</li>
+  <li class="list-group-item">Название: {{ post.name }}</li>
+  <li class="list-group-item">Описание: {{ post.description }}</li>
+  <li class="list-group-item">Текст: {{ post }}... <a href="{% url 'posts:post_detail' post.id %}" class="text-primary" style="text-decoration: none">Читать полностью</a></li>
+  <li class="list-group-item">💬 {% comment_count post.id %}| 👍 {% post_grade_like post.id %} | 👎 {% post_grade_dislike post.id%} | 👁️ {% unique_watch post.id %} | 👀 {% watch post.id %}</li>
+    </ul>
+        <hr>
+    {% endfor %}
+{% endblock %}
